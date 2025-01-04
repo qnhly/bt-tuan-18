@@ -57,7 +57,102 @@ void addEdge(Graph *g, char src, char dest){
     g->adjLists[destIndex]->next = newNode;
 }
 
-
+//duyệt theo BFS
+void BFS(Graph *g, char start){
+    //chuyen dinh thanh chi so
+    int startIndex = start - 'a';
+    //tao mang kiem tra dinh da duyet hay chua
+    bool *visited = new bool[g->numVertices];
+    for(int i = 0; i < g->numVertices; i++){
+        visited[i] = false;
+    }
+    //tao hang doi
+    Node *queue = NULL;
+    //dua dinh start vao hang doi
+    visited[startIndex] = true;
+    cout << start << " ";
+    Node *p = g->adjLists[startIndex]->next;
+    while(p){
+        if(!visited[p->vertex - 'a']){
+            visited[p->vertex - 'a'] = true;
+            cout << p->vertex << " ";
+            //dua dinh p vao hang doi
+            Node *newNode = createNode(p->vertex);
+            newNode->next = queue;
+            queue = newNode;
+        }
+        p = p->next;
+    }
+    //duyet cac dinh con lai trong hang doi
+    while(queue){
+        Node *top = queue;
+        queue = queue->next;
+        int u = top->vertex - 'a';
+        p = g->adjLists[u]->next;
+        while(p){
+            if(!visited[p->vertex - 'a']){
+                visited[p->vertex - 'a'] = true;
+                cout << p->vertex << " ";
+                //dua dinh p vao hang doi
+                Node *newNode = createNode(p->vertex);
+                newNode->next = queue;
+                queue = newNode;
+            }
+            p = p->next;
+        }
+    }
+}
+//duyet theo DFS
+void DFS(Graph *g, char start){
+    //chuyen dinh thanh chi so
+    int startIndex = start - 'a';
+    //tao mang kiem tra dinh da duyet hay chua
+    bool *visited = new bool[g->numVertices];
+    for(int i = 0; i < g->numVertices; i++){
+        visited[i] = false;
+    }
+    //tao stack
+    Node *stack = NULL;
+    //dua dinh start vao stack
+    visited[startIndex] = true;
+    cout << start << " ";
+    Node *p = g->adjLists[startIndex]->next;
+    while(p){
+        if(!visited[p->vertex - 'a']){
+            visited[p->vertex - 'a'] = true;
+            cout << p->vertex << " ";
+            //dua dinh p vao stack
+            Node *newNode = createNode(p->vertex);
+            newNode->next = stack;
+            stack = newNode;
+            p = g->adjLists[p->vertex - 'a']->next;
+        }
+        else{
+            p = p->next;
+        }
+    }
+    //duyet cac dinh con lai trong stack
+    while(stack){
+        Node *top = stack;
+        stack = stack->next;
+        int u = top->vertex - 'a';
+        p = g->adjLists[u]->next;
+        while(p){
+            if(!visited[p->vertex - 'a']){
+                visited[p->vertex - 'a'] = true;
+                cout << p->vertex << " ";
+                //dua dinh p vao stack
+                Node *newNode = createNode(p->vertex);
+                newNode->next = stack;
+                stack = newNode;
+                p = g->adjLists[p->vertex - 'a']->next;
+            }
+            else{
+                p = p->next;
+            }
+        }
+    }
+}
 
 int main(){
     int n;
